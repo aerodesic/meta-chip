@@ -1,0 +1,28 @@
+From 97abc7fb9caa5902ef7958aedfbaaa7382ec3dbf Mon Sep 17 00:00:00 2001
+From: Gary Oliver <go@aerodesic.com>
+Date: Fri, 29 Sep 2017 13:14:51 -0700
+Subject: [PATCH] Modified makefile to produce correct symbolic link for
+ wx-config installation under yocto.
+
+---
+ Makefile.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 57f68c1..012deee 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -14713,7 +14713,9 @@ install-wxconfig:
+ 	$(INSTALL_DIR) $(DESTDIR)$(bindir)
+ 	$(INSTALL_DIR) $(DESTDIR)$(libdir)/wx/config
+ 	$(INSTALL_PROGRAM) lib/wx/config/$(TOOLCHAIN_FULLNAME) $(DESTDIR)$(libdir)/wx/config
+-	(cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) $(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config || cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
++	# G. Oliver <go@aerodesic.com> Producing the wrong symbolic link to wx-config when compiled under yocto build process
++	# (cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) $(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config || cp -p $(DESTDIR)$(libdir)/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
++	(cd $(DESTDIR)$(bindir) && rm -f wx-config && $(LN_S) ../`basename $(libdir)`/wx/config/$(TOOLCHAIN_FULLNAME) wx-config)
+ 
+ locale_install: 
+ 	$(INSTALL_DIR) $(DESTDIR)$(datadir)/locale
+-- 
+2.7.4
+
